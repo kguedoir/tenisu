@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: tenisu-api
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+    healthCheckPath: /swagger-ui/index.html
+    # Render passes PORT; override server.port or just respect default 8080
+    # If you want to bind dynamic port: add env var SPRING_APPLICATION_JSON
+    # with {"server.port":"$PORT"} or use args below.
+    # For Spring Boot 3 you can set server.port from env var SERVER_PORT if mapped.
+    # Simpler: set a startCommand injecting port
+    startCommand: >-
+      java -Dserver.port=$PORT -jar /app/app.jar
+
+# Optional: preview environments for PRs
+#  - type: web
+#    name: tenisu-api-pr
+#    env: docker
+#    plan: free
+#    dockerfilePath: ./Dockerfile
+#    autoDeploy: false
+#    previewPlan: free
+#    branch: main
+# Maven / Java build output
+**/target
+
+# Node / Angular
+**/node_modules
+**/dist
+
+# IDE / tooling
+.idea
+.vscode
+*.iml
+
+# Git
+.git
+.gitignore
+
+# Logs / temp
+*.log
+*.pid
+.DS_Store
+

@@ -65,11 +65,74 @@ Le module `tenisu-front` contient l'application Angular. Cette notice se concent
 
 Consultez les scripts dans `tenisu-front/package.json` pour les commandes exactes.
 
+## Déploiement Docker + Render + CI/CD
+
+### Image Docker locale
+Construire l'image multi-stage (Angular + Spring):
+```bash
+docker build -t tenisu:local .
+```
+Lancer le conteneur:
+```bash
+docker run --rm -p 8080:8080 tenisu:local
+```
+Swagger: http://localhost:8080/swagger-ui/index.html
+
+### Spécificités image
+- Multi-stage: Maven (build) puis JRE léger (runtime)
+- Angular est compilé via le cycle Maven et copié dans `public/` par le plugin resources.
+- Utilisateur non-root `appuser` (UID 1001).
+
+### Render (déploiement source ou image)
+Deux approches:
+1. Source + Dockerfile: Render lit `render.yaml` et construit l'image.
+2. Image pré-construite (GHCR/Docker Hub) + Hook de déploiement.
+
+Fichier `render.yaml` fourni:
+- Service web `tenisu-api` (plan free) utilisant la commande de démarrage injectant `$PORT`.
+- Chemin de health check (Swagger UI) `/swagger-ui/index.html`.
+
+Étapes recommandées:
+1. Créer un service Web sur Render (New + Blueprint) en pointant sur le repo (branch `main`).
+2. Vérifier les variables d'environnement (facultatif) dans le dashboard Render.
+3. Déploiements automatiques activés (par défaut).
+
+### Variables / Secrets Render
+Aucune base de données externe nécessaire (H2 en mémoire). Possibles variables à ajouter plus tard:
+- `SPRING_PROFILES_ACTIVE=prod`
+- `JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0`
+
+### GitHub Actions (workflow CI/CD)
+Workflow: `.github/workflows/ci-cd.yml`
+Jobs:
+- build-and-test: Compile Java + Angular, exécute tests backend & front (headless).
+- docker-image: Construit et pousse l'image vers GHCR (`ghcr.io/<owner>/tenisu:latest` + tags version + commit).
+- render-deploy-from-source: Déclenche un déploiement Render via API (si secrets fournis).
+
+Secrets requis (Settings > Secrets and variables > Actions):
+- `DOCKERHUB_USERNAME` (optionnel)
+- `DOCKERHUB_TOKEN` (optionnel, PAT Docker Hub)
+- `RENDER_API_KEY` (optionnel, pour déclenchement API)
+- `RENDER_SERVICE_ID` (optionnel, ID du service Render)
+- `RENDER_DEPLOY_HOOK_URL` (optionnel, alternative simple via hook)
+
+### Récupérer Service ID Render
+`curl -H "Authorization: Bearer <API_KEY>" https://api.render.com/v1/services | jq` et localiser `id`.
+
+### Déploiement manuel via Hook
+Si vous configurez un Deploy Hook (Settings > Deploy Hooks) sur Render:
+```bash
+curl -X POST "$RENDER_DEPLOY_HOOK_URL"
+```
+
+### Mises à jour
+- Pousser sur `main` déclenche build + nouvelle image + (optionnel) déploiement Render.
+- Tags de version gérés à partir du `<version>` Maven parent.
+
 ## Dépannage
-- Port 8080 déjà utilisé: libérez le port ou changez le port Spring (`server.port`) via `application.properties` ou `-Dserver.port=...`.
-- JDK non détecté: vérifiez `java -version` et votre variable d'environnement `PATH`.
-- Le script `start.sh` n'ouvre pas le navigateur: ouvrez manuellement http://localhost:8080.
-- L'application s'arrête immédiatement: consultez `tenisu-apis/target/app.log`.
+- Port dynamique Render: Le `startCommand` dans `render.yaml` force `-Dserver.port=$PORT`.
+- Erreur front dans build CI: Vérifier la version Node définie dans `tenisu-front/pom.xml` (frontend-maven-plugin).
+- Image trop lourde: Envisager distroless ou JLink personnalisé.
 
 ## Licence
 Usage interne/démonstration. Adapter selon vos besoins.
