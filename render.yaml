@@ -10,9 +10,7 @@ services:
         value: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
     # Simple health check hitting Swagger UI (replace with /actuator/health if you add Spring Boot Actuator)
     healthCheckPath: /swagger-ui/index.html
-    # Force Spring Boot to bind to the dynamic port provided by Render
-    startCommand: >
-      java -Dserver.port=$PORT -jar /app/app.jar
+    # startCommand removed (Render docker runtime forbids it); dynamic port handled by ENTRYPOINT in Dockerfile
 
 # Optional: preview environment for PRs (uncomment & adapt)
 #  - type: web
