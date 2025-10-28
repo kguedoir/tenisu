@@ -8,16 +8,13 @@ services:
     envVars:
       - key: JAVA_TOOL_OPTIONS
         value: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+    # Simple health check hitting Swagger UI (replace with /actuator/health if you add Spring Boot Actuator)
     healthCheckPath: /swagger-ui/index.html
-    # Render passes PORT; override server.port or just respect default 8080
-    # If you want to bind dynamic port: add env var SPRING_APPLICATION_JSON
-    # with {"server.port":"$PORT"} or use args below.
-    # For Spring Boot 3 you can set server.port from env var SERVER_PORT if mapped.
-    # Simpler: set a startCommand injecting port
-    startCommand: >-
+    # Force Spring Boot to bind to the dynamic port provided by Render
+    startCommand: >
       java -Dserver.port=$PORT -jar /app/app.jar
 
-# Optional: preview environments for PRs
+# Optional: preview environment for PRs (uncomment & adapt)
 #  - type: web
 #    name: tenisu-api-pr
 #    env: docker
@@ -26,24 +23,3 @@ services:
 #    autoDeploy: false
 #    previewPlan: free
 #    branch: main
-# Maven / Java build output
-**/target
-
-# Node / Angular
-**/node_modules
-**/dist
-
-# IDE / tooling
-.idea
-.vscode
-*.iml
-
-# Git
-.git
-.gitignore
-
-# Logs / temp
-*.log
-*.pid
-.DS_Store
-
