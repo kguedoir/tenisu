@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.7</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>fr.latelier</groupId>
+    <artifactId>tenisu</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+    <description>tenisu, un outil de classement des joueurs Tenis.</description>
+
+    <properties>
+        <project.key>tenisu</project.key>
+        <revision>0.0.1</revision>
+        <sha1/>
+        <changelist>-SNAPSHOT</changelist>
+
+        <project.java.version>21</project.java.version>
+        <project.java.version.enforced>[21,22)</project.java.version.enforced>
+        <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
+
+        <!-- Test properties -->
+        <project.test.mem.xmx>256m</project.test.mem.xmx>
+    </properties>
+
+    <modules>
+        <module>tenisu-front</module>
+        <module>tenisu-apis</module>
+    </modules>
+
+    <build>
+        <defaultGoal>verify</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

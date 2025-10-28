@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>fr.latelier</groupId>
+    <artifactId>tenisu</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>tenisu-front</artifactId>
+  <name>${project.artifactId}</name>
+
+  <properties>
+    <!-- versions -->
+    <node.version>22.20.0</node.version>
+    <npm.version>11.6.2</npm.version>
+
+    <!-- plugins versions -->
+    <frontend-maven-plugin.version>1.15.4</frontend-maven-plugin.version>
+
+    <!-- sonar properties -->
+    <sonar.exclusions>**/node_modules/**,**/*.spec.ts,**/dist/**,**/docs/**,**/*.js,**/coverage/**</sonar.exclusions>
+    <sonar.sources>src</sonar.sources>
+    <sonar.test.inclusions>**/*.spec.ts</sonar.test.inclusions>
+    <sonar.ts.tslint.configPath>tslint.json</sonar.ts.tslint.configPath>
+    <sonar.ts.coverage.lcovReportPath>coverage/${project.artifactId}/lcov.info</sonar.ts.coverage.lcovReportPath>
+    <sonar.javascript.lcov.reportPaths>${sonar.ts.coverage.lcovReportPath}</sonar.javascript.lcov.reportPaths>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>./dist/frontend</directory>
+        <targetPath>static</targetPath>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-maven-plugin.version}</version>
+
+        <configuration>
+          <nodeVersion>v${node.version}</nodeVersion>
+          <npmVersion>${npm.version}</npmVersion>
+          <workingDirectory>./</workingDirectory>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>npm config</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+
+            <configuration>
+              <arguments>config list</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>run tests</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>test</phase>
+
+            <configuration>
+              <arguments>run verify</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm run build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run build -- --configuration production</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
