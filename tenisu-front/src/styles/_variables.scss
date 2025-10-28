@@ -1,0 +1,16 @@
+// Variables SCSS communes — utilisées à travers l'application
+// Couleurs principales
+$primary-text: #000000; // Texte principal
+$secondary-text: rgba(0, 0, 0, 0.3); // Libellés à 30% d’opacité
+$accent-color: #F2753B; // Orange principal
+$accent-color-light: #EBAD65; // Orange clair
+$card-separator: #ddd; // Séparateur / bordures légères
+
+// Icône « fermer » (croix)
+$line-color: #dddddd; // Couleur des traits de la croix
+$line-thickness: 2px; // Épaisseur des traits
+$icon-size: 24px; // Taille de l’icône
+
+// Page d’accueil
+$page-bg: #f8af61; // Couleur de fond de page (héritée de l’image)
+$search-bg: #c98544; // Fond plus foncé pour la recherche

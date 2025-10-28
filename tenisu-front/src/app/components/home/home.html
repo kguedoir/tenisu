@@ -1,0 +1,25 @@
+<div class="home-container">
+  <div class="list-column">
+
+    <div class="search-bar-wrapper">
+      <input
+        type="search"
+        name="playerSearch"
+        placeholder="Rechercher un joueur"
+        class="custom-search-input"
+        autocomplete="off"
+        inputmode="search"
+        enterkeyhint="search"
+        aria-label="Rechercher un joueur"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchTermChange()"
+      >
+    </div>
+
+    <div class="player-list">
+      @for (player of players; track player.id; let i = $index) {
+      <app-player-card [player]="player" ></app-player-card>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+@use '../../../styles/variables' as v;
+
+      // Typography helpers
+      @mixin font-title { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+      @mixin font-subtitle { font-family: 'Mulish', sans-serif; font-weight: 700; }
+      @mixin font-body { font-family: 'Mulish', sans-serif; font-weight: 600; }
+      @mixin stat-accent { @include font-title; color: v.$accent-color; }
+
+      // Component: player card
+      .player-card {
+        // Layout & box model
+        display: flex;
+        position: relative;
+        align-items: center;
+        width: 100%;
+        height: 10rem;
+        min-height: 7rem;
+        padding: 8px 0;
+        margin-bottom: 24px;
+        box-sizing: border-box;
+
+        // Visual
+        background: white;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.15s ease-in-out,
+                    box-shadow 0.2s ease-in-out,
+                    transform 0.2s ease-in-out;
+
+        &:hover {
+          background-color: #dddada;
+        }
+
+        // Image container
+        .player-image-container {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          width: 30%;
+          height: 100%;
+          padding: 0 16px 0 12px;
+          overflow: visible;
+
+          .player-image {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            object-position: left bottom;
+            display: block;
+            border-radius: 0;
+          }
+        }
+
+        // Details
+        .player-details {
+          flex: 1 1 auto;
+          display: flex;
+          flex-direction: column;
+          padding-right: 20px;
+          overflow: hidden;
+
+          .player-name {
+            @include font-title;
+            font-size: 1.25rem;
+            color: v.$accent-color;
+            margin: 0 0 6px;
+            padding-bottom: 1.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: start;
+          }
+
+          .player-stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px 12px;
+
+            .stat-group {
+              display: flex;
+              flex-direction: column;
+              text-align: left;
+              padding-right: 15px;
+
+              .stat-label {
+                  @include font-subtitle;
+                  color: v.$secondary-text;
+                  text-transform: uppercase;
+                  letter-spacing: 0.08em;
+                padding-bottom: 10px;
+              }
+
+              .stat-value {
+                @include font-body;
+                font-size: 0.85rem;
+                color: v.$primary-text;
+
+                &.rank,
+                &.points,
+                &.country {
+                  @include stat-accent;
+                }
+              }
+            }
+          }
+        }
+
+        // Responsive ≤ 900px
+        @media (max-width: 900px) {
+          height: auto;
+          padding: 8px 8px 12px;
+
+          .player-image-container {
+            width: 35%;
+            height: 9rem;
+            padding: 0 12px;
+          }
+
+          .player-details {
+            .player-name {
+              font-size: 1.125rem;
+              padding-bottom: 0.75rem;
+            }
+          }
+        }
+
+        // Responsive ≤ 600px (mobile)
+        @media (max-width: 600px) {
+          flex-direction: column;
+          align-items: stretch;
+          height: auto;
+          padding: 0;
+
+          .player-image-container {
+            width: 100%;
+            height: clamp(160px, 55vw, 240px);
+            justify-content: center;
+            padding: 0 12px;
+
+            .player-image {
+              object-position: center bottom;
+            }
+          }
+
+          .player-details {
+            padding: 12px 16px 16px;
+
+            .player-stats-row {
+              justify-content: flex-start;
+              gap: 8px 16px;
+            }
+
+            .stat-value {
+              font-size: 0.95rem;
+            }
+          }
+        }
+      }

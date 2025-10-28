@@ -1,0 +1,64 @@
+<div class="detail-overlay">
+  @if (player; as p) {
+    <button class="close-btn" (click)="back()" aria-label="Fermer"></button>
+
+    <div class="detail-card">
+      <div>
+        <img [ngSrc]="p.picture" [alt]="fullName" width="500" height="703" class="portrait" priority/>
+
+      </div>
+      <div class="">
+        <div class="title-block">
+          <div class="firstname">{{ p.firstname }}</div>
+          <div class="lastname">{{ p.lastname }}</div>
+
+          <div class="stats-section">
+            <div class="mini-stats">
+              <div class="stat">
+                <div class="label">RANG</div>
+                <div class="value orange">#{{ p.data.rank }}</div>
+              </div>
+              <div class="stat">
+                <div class="label">POINTS</div>
+                <div class="value orange">{{ p.data.points }}</div>
+              </div>
+              <div class="stat">
+                <div class="label">PAYS</div>
+                <div class="value">{{ p.country.code | countryName }}</div>
+              </div>
+            </div>
+            <div class="info-grid">
+              <div class="info">
+                <div class="label">ÂGE</div>
+                <div class="value">{{ p.data.age }}</div>
+              </div>
+              <div class="info">
+                <div class="label">TAILLE</div>
+                <div class="value">{{ p.data.height }} cm</div>
+              </div>
+              <div class="info">
+                <div class="label">POIDS</div>
+                <div class="value">{{ (p.data.weight / 1000) | number:'1.0-0' }} kg</div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Matchs récents</div>
+              <ul class="last">
+                @for (r of p.data.last; track r; let i = $index) {
+                  <li>
+                    Match {{ i + 1 }} : <span [class.win]="r === 1"
+                                             [class.loss]="r === 0">{{ r === 1 ? 'Victoire' : 'Défaite' }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flag-area">
+        <img [ngSrc]="p.country.picture" [alt]="p.country.code | countryName" width="140" height="90" class="flag"/>
+        <div class="country-code">{{ p.country.code }}</div>
+      </div>
+    </div>
+  }
+</div>

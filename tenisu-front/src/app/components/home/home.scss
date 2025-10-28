@@ -1,0 +1,157 @@
+@use '../../../styles/variables' as v;
+
+// Breakpoints
+$bp-lg: 1024px;
+$bp-md: 768px;
+$bp-sm: 480px;
+
+// Mixins
+@mixin font-mulish($weight: 500) {
+  font-family: 'Mulish', sans-serif;
+  font-weight: $weight;
+}
+
+@mixin search-input-base {
+  box-sizing: border-box;
+  max-width: 100%;
+  width: 100%;
+  min-height: 44px;
+  @include font-mulish(500);
+  font-size: clamp(16px, 0.95rem + 0.2vw, 18px);
+  padding: 14px 24px;
+  background: rgba(117, 69, 36, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+
+  &::placeholder {
+    color: #e3a561;
+    @include font-mulish(500);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 0 10px 24px rgba(0, 0, 0, 0.18);
+  }
+}
+
+// Root container (kept as in original)
+.home-container {
+  min-height: 100vh;
+  background: transparent;
+  padding-left: unset;
+}
+
+// Left column
+.list-column {
+  padding: 40px;
+  max-width: 600px;
+}
+
+// Search bar wrapper
+.search-bar-wrapper {
+  margin-bottom: 25px;
+}
+
+// Search input (merged duplicated definitions, preserved final visual)
+.custom-search-input {
+  @include search-input-base;
+  // Original simpler variant values preserved via variable
+  background-color: v.$search-bg;
+}
+
+// Right column
+.ball-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+// Ball image
+.tennis-ball-img {
+  max-width: 100%;
+  height: 70%;
+  width: 70%;
+  filter: drop-shadow(0px 20px 40px rgba(0, 0, 0, 0.4));
+}
+
+// ≥ Large tablets / small desktops
+@media (max-width: $bp-lg) {
+  .list-column {
+    padding: 24px;
+    max-width: none;
+  }
+
+  .ball-column {
+    padding: 30px;
+  }
+
+  .tennis-ball-img {
+    width: 60%;
+    height: auto;
+  }
+
+  .custom-search-input {
+    padding: 14px 18px;
+  }
+}
+
+// ≤ Tablets
+@media (max-width: $bp-md) {
+  .home-container {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .list-column {
+    padding: 20px;
+    max-width: 100%;
+  }
+
+  .search-bar-wrapper {
+    margin-bottom: 16px;
+  }
+
+  .ball-column {
+    padding: 20px;
+    display: none;
+  }
+
+  .tennis-ball-img {
+    width: 70%;
+    max-width: 320px;
+    height: auto;
+  }
+}
+
+// ≤ Small phones
+@media (max-width: $bp-sm) {
+  .list-column {
+    padding: 16px;
+  }
+
+  .search-bar-wrapper {
+    margin-bottom: 12px;
+  }
+
+  .custom-search-input {
+    min-height: 44px;
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+
+  .ball-column {
+    padding: 12px;
+  }
+
+  .tennis-ball-img {
+    width: 60%;
+    max-width: 220px;
+    height: auto;
+    filter: none;
+  }
+}

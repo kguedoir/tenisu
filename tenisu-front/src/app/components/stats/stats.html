@@ -1,0 +1,25 @@
+<div class="stats-page">
+  <h2>Statistiques</h2>
+  @if (stats; as s) {
+    <div class="stats-card">
+      <div class="stat-item">
+        <div class="stat-label">Meilleur pays</div>
+        <div class="country">
+          <img [src]="s.bestCountry.picture" [alt]="s.bestCountry.code" class="country-flag">
+          <span class="country-code">{{ s.bestCountry.code }}</span>
+          <span class="country-win">— {{ s.bestCountry.winRatio | percent:'1.0-0' }}</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">IMC moyen</div>
+        <div class="stat-value">{{ s.averageBmi | number:'1.2-2' }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Taille médiane</div>
+        <div class="stat-value">{{ s.medianHeightCm }} cm</div>
+      </div>
+    </div>
+  } @else {
+    <p>Chargement…</p>
+  }
+</div>

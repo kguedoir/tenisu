@@ -1,0 +1,87 @@
+
+// Inclusion du thème Angular Material avec `mat.theme()`.
+// Ce mixin Sass définit les variables CSS utilisées pour styliser les composants Angular Material
+// selon les spécifications Material 3.
+// En savoir plus sur le theming et son utilisation: https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$cyan-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Thème clair par défaut (peut être changé en `dark` ou `light dark`).
+  color-scheme: light;
+
+  background: rgba(206, 129, 77, 1) url("../public/bg.jpg") fixed;
+
+  // Styles de texte par défaut via les variables système Angular Material
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Réinitialiser la marge du user agent.
+  margin: 0;
+}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@600;700&display=swap');
+
+
+// Charger un thème Angular Material précompilé
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+html, body {
+  /* Définir une hauteur pour permettre min-height: 100vh */
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Montserrat, Mulish, sans-serif; }
+
+
+/* Variables CSS du design system */
+:root {
+  --color-orange: #F2753B;
+  --color-orange-light: #EBAD65;
+  --color-black-30: rgba(0, 0, 0, 0.3);
+}
+
+
+/* Responsive top toolbar/menu */
+mat-toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Inline links hidden by default (mobile-first) */
+.toolbar-links {
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Menu icon visible by default (mobile-first) */
+.menu-toggle {
+  display: inline-flex;
+}
+
+/* ≥ 768px: show inline links, hide hamburger */
+@media (min-width: 768px) {
+  .toolbar-links {
+    display: inline-flex;
+  }
+  .menu-toggle {
+    display: none;
+  }
+}
