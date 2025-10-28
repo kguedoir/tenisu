@@ -1,0 +1,20 @@
+{
+  "id": 1,
+  "firstname": "Rafael",
+  "lastname": "NADAL",
+  "shortname": "R.NAD",
+  "sex": "M",
+  "country": {
+    "picture": "https://tenisu.latelier.co/resources/Espagne.png",
+    "code": "ESP"
+  },
+  "picture": "https://tenisu.latelier.co/resources/Nadal.png",
+  "data": {
+    "rank": 3,
+    "points": 7850,
+    "weight": 85000,
+    "height": 185,
+    "age": 38,
+    "last": [1, 1, 0, 1, 1]
+  }
+}
