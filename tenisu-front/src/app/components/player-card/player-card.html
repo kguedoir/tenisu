@@ -1,35 +1,34 @@
-<div class="player-card">
-  <button (click)="navigateToDetail()" (keydown.enter)="navigateToDetail()"
-          tabindex="0"
-          [attr.aria-label]="'Voir les détails pour ' + getPlayerFullName()"
-          matTooltip="Voir les détails" matTooltipPosition="right"
-          [matTooltipDisabled]="isTouch">
-    <div class="player-image-container">
-      @let pic = player()?.picture;
-      @if (pic && (pic.startsWith('http://') || pic.startsWith('https://'))) {
-        <img [ngSrc]="pic" [alt]="getPlayerFullName()" fill priority class="player-image"
-             [sizes]="'(max-width: 768px) 50vw, 25vw'"/>
-      } @else {
-        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
-             [alt]="getPlayerFullName()" class="player-image"/>
-      }
-    </div>
-    <div class="player-details" >
-      <div class="player-name">{{ getPlayerFullName() }}</div>
-      <div class="player-stats-row">
-        <div class="stat-group">
-          <div class="stat-label">RANG</div>
-          <div class="stat-value rank">#{{ player()?.data?.rank ?? '' }}</div>
-        </div>
-        <div class="stat-group">
-          <div class="stat-label">POINTS</div>
-          <div class="stat-value points">{{ player()?.data?.points ?? '' }}</div>
-        </div>
-        <div class="stat-group">
-          <div class="stat-label">PAYS</div>
-          <div class="stat-value country">{{ player()?.country?.code | countryName }}</div>
-        </div>
+<div class="player-card" (click)="navigateToDetail()" (keydown.enter)="navigateToDetail()"
+     tabindex="0"
+     role="button"
+     [attr.aria-label]="'Voir les détails pour ' + getPlayerFullName()"
+     matTooltip="Voir les détails" matTooltipPosition="right"
+     [matTooltipDisabled]="isTouch">
+  <div class="player-image-container">
+    @let pic = player()?.picture;
+    @if (pic && (pic.startsWith('http://') || pic.startsWith('https://'))) {
+      <img [ngSrc]="pic" [alt]="getPlayerFullName()" fill priority class="player-image"
+           [sizes]="'(max-width: 768px) 50vw, 25vw'"/>
+    } @else {
+      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+           [alt]="getPlayerFullName()" class="player-image"/>
+    }
+  </div>
+  <div class="player-details">
+    <div class="player-name">{{ getPlayerFullName() }}</div>
+    <div class="player-stats-row">
+      <div class="stat-group">
+        <div class="stat-label">RANG</div>
+        <div class="stat-value rank">#{{ player()?.data?.rank ?? '' }}</div>
+      </div>
+      <div class="stat-group">
+        <div class="stat-label">POINTS</div>
+        <div class="stat-value points">{{ player()?.data?.points ?? '' }}</div>
+      </div>
+      <div class="stat-group">
+        <div class="stat-label">PAYS</div>
+        <div class="stat-value country">{{ player()?.country?.code | countryName }}</div>
       </div>
     </div>
-  </button>
+  </div>
 </div>

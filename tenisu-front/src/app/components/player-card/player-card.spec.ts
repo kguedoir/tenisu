@@ -49,9 +49,18 @@ describe('PlayerCard', () => {
 
   it('should navigate to detail on click', () => {
     const navigateSpy = spyOn(router, 'navigate');
-    const button = fixture.debugElement.query(By.css('.player-card button'));
-    expect(button).toBeTruthy();
-    button.nativeElement.click();
+    const card = fixture.debugElement.query(By.css('.player-card'));
+    expect(card).toBeTruthy();
+    card.nativeElement.click();
+    expect(navigateSpy).toHaveBeenCalledWith(['/player', 42]);
+  });
+
+  it('should navigate to detail on Enter key', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    const card = fixture.debugElement.query(By.css('.player-card'));
+    expect(card).toBeTruthy();
+    const event = new KeyboardEvent('keydown', { key: 'Enter' });
+    card.nativeElement.dispatchEvent(event);
     expect(navigateSpy).toHaveBeenCalledWith(['/player', 42]);
   });
 });
