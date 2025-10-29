@@ -61,7 +61,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to Docker Hub
-        if: env.DOCKERHUB_USERNAME
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -70,9 +70,9 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract version
         id: vars
@@ -97,19 +97,21 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: (Optional) Notify Render via Deploy Hook
-        if: secrets.RENDER_DEPLOY_HOOK_URL != ''
+        if: ${{ secrets.RENDER_DEPLOY_HOOK_URL != '' }}
         run: |
           curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL" || echo "Render deploy hook failed (non-blocking)"
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
   render-deploy-from-source:
-    name: Trigger Render build (Source) 
-    if: ${{ github.ref == 'refs/heads/main' && secrets.RENDER_SERVICE_ID && secrets.RENDER_API_KEY }}
+    name: Trigger Render build (Source)
+    # Run only for push events to main branch (no secrets context at job-level)
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Render deploy (from source)
+        if: ${{ secrets.RENDER_SERVICE_ID != '' && secrets.RENDER_API_KEY != '' }}
         run: |
           curl -fsSL -X POST \
             -H 'Accept: application/json' \
@@ -118,4 +120,3 @@ jobs:
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-
