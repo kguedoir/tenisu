@@ -46,7 +46,7 @@
             <div class="section">
               <div class="section-title">Matchs récents</div>
               <ul class="last">
-                @for (r of p.data.last; track r; let i = $index) {
+                @for (r of p.data.last; track i; let i = $index) {
                   <li>
                     Match {{ i + 1 }} : <span [class.win]="r === 1"
                                              [class.loss]="r === 0">{{ r === 1 ? 'Victoire' : 'Défaite' }}</span>
