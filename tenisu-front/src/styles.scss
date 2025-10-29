@@ -1,4 +1,3 @@
-
 // Inclusion du thème Angular Material avec `mat.theme()`.
 // Ce mixin Sass définit les variables CSS utilisées pour styliser les composants Angular Material
 // selon les spécifications Material 3.
@@ -20,7 +19,11 @@ body {
   // Thème clair par défaut (peut être changé en `dark` ou `light dark`).
   color-scheme: light;
 
-  background: rgba(206, 129, 77, 1) url("../public/bg.jpg") fixed;
+  // Remove background-attachment: fixed (caused by shorthand) for better mobile scroll performance.
+  background: rgba(206, 129, 77, 1) url("../public/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll; // explicitly set
 
   // Styles de texte par défaut via les variables système Angular Material
   color: var(--mat-sys-on-surface);
@@ -28,23 +31,10 @@ body {
 
   // Réinitialiser la marge du user agent.
   margin: 0;
+  -webkit-overflow-scrolling: touch; // iOS smooth scrolling
 }
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@600;700&display=swap');
-
-
-// Charger un thème Angular Material précompilé
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
-html, body {
-  /* Définir une hauteur pour permettre min-height: 100vh */
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Montserrat, Mulish, sans-serif; }
-
 
 /* Variables CSS du design system */
 :root {

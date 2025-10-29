@@ -1,23 +1,11 @@
 services:
   - type: web
     name: tenisu-api
-    env: docker
+    runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
     autoDeploy: true
     envVars:
       - key: JAVA_TOOL_OPTIONS
         value: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
-    # Simple health check hitting Swagger UI (replace with /actuator/health if you add Spring Boot Actuator)
     healthCheckPath: /swagger-ui/index.html
-    # startCommand removed (Render docker runtime forbids it); dynamic port handled by ENTRYPOINT in Dockerfile
-
-# Optional: preview environment for PRs (uncomment & adapt)
-#  - type: web
-#    name: tenisu-api-pr
-#    env: docker
-#    plan: free
-#    dockerfilePath: ./Dockerfile
-#    autoDeploy: false
-#    previewPlan: free
-#    branch: main

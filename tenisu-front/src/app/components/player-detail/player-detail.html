@@ -1,13 +1,15 @@
 <div class="detail-overlay">
   @if (player; as p) {
-    <button class="close-btn" (click)="back()" aria-label="Fermer"></button>
+    <button class="close-btn" (click)="back()" aria-label="Fermer">
+      <span class="sr-only">Fermer la fenêtre détail</span>
+    </button>
 
     <div class="detail-card">
-      <div>
+      <div class="portrait-wrapper">
         <img [ngSrc]="p.picture" [alt]="fullName" width="500" height="703" class="portrait" priority/>
 
       </div>
-      <div class="">
+      <div class="detail-content">
         <div class="title-block">
           <div class="firstname">{{ p.firstname }}</div>
           <div class="lastname">{{ p.lastname }}</div>
