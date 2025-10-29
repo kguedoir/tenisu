@@ -49,7 +49,8 @@ describe('PlayerCard', () => {
 
   it('should navigate to detail on click', () => {
     const navigateSpy = spyOn(router, 'navigate');
-    const button = fixture.debugElement.query(By.css('button.player-card'));
+    const button = fixture.debugElement.query(By.css('.player-card button'));
+    expect(button).toBeTruthy();
     button.nativeElement.click();
     expect(navigateSpy).toHaveBeenCalledWith(['/player', 42]);
   });
