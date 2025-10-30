@@ -75,25 +75,32 @@ public class PlayerServiceImpl implements PlayerService {
 
     /**
      * Crée un nouveau joueur à partir d'un DTO et le persiste.
+     * Si le pays fourni n'existe pas encore, il est ajouté en base avant la création du joueur.
      * @param dto payload représentant le joueur
      * @return le joueur créé, remappé en DTO
      */
     @Override
-    @Transactional
+    @Transactional // readOnly = false implicite
     public PlayerDto create(PlayerDto dto) {
         if (dto == null) return null;
-        // Récupération paresseuse d'une référence pays par son code
         CountryDto c = dto.country();
-        Country countryRef = (c != null && c.code() != null)
-                ? entityManager.getReference(Country.class, c.code())
-                : null;
+        Country countryRef = null;
+        if (c != null && c.code() != null) {
+            // Recherche du pays existant
+            countryRef = entityManager.find(Country.class, c.code());
+            if (countryRef == null) {
+                // Création si absent; picture peut être vide mais non null (constructeur impose non null)
+                String picture = (c.picture() == null) ? "" : c.picture();
+                countryRef = new Country(c.code(), picture);
+                entityManager.persist(countryRef);
+            }
+        }
 
         PlayerDataDto dd = dto.data();
         PlayerData data = (dd == null) ? null : new PlayerData(dd.rank(), dd.points(), dd.weight(), dd.height(), dd.age());
-
         List<Integer> last = (dd == null) ? null : dd.lastResults();
 
-        Player entity = new Player(dto.id(), dto.firstname(), dto.lastname(), dto.shortname(), dto.sex(), countryRef, dto.picture(), data, last);
+        Player entity = new Player(dto.firstname(), dto.lastname(), dto.shortname(), dto.sex(), countryRef, dto.picture(), data, last);
         Player saved = playerRepository.save(entity);
         return PlayerDto.fromEntity(saved);
     }

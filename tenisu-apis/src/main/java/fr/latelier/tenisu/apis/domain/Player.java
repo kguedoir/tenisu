@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class Player {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID)
     private Long id;
 
@@ -51,8 +52,7 @@ public class Player {
     /**
      * Constructeur complet pour créer un joueur.
      */
-    public Player(Long id, String firstname, String lastname, String shortname, String sex, Country country, String picture, PlayerData data, List<Integer> last) {
-        this.id = id;
+    public Player( String firstname, String lastname, String shortname, String sex, Country country, String picture, PlayerData data, List<Integer> last) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.shortname = shortname;

@@ -157,16 +157,17 @@ class PlayerServiceImplTest {
     }
 
     @Test
-    @DisplayName("create: persiste un joueur et renvoie le DTO créé")
+    @DisplayName("create: persiste un joueur et renvoie le DTO créé (id auto-généré, donc null ici)")
     void create_persists_and_returns_dto() {
         // Arrange
-        PlayerDto dto = new PlayerDto(42L, "Novak", "Djokovic", "N.DJO", "M",
+        PlayerDto dto = new PlayerDto(null, "Novak", "Djokovic", "N.DJO", "M",
                 new CountryDto("SRB", "pic-srb"), "pic-p",
                 new PlayerDataDto(1, 10000, 80000, 188, 36, List.of(1, 1, 0, 1, 1)));
 
-        when(entityManager.getReference(Country.class, "SRB"))
+        // Le pays existe déjà: entityManager.find retourne une instance
+        when(entityManager.find(Country.class, "SRB"))
                 .thenReturn(new Country("SRB", "pic-srb"));
-        // On renvoie l'entité passée à save pour simuler la persistance
+        // On renvoie l'entité passée à save pour simuler la persistance (id restera null car pas de JPA réelle)
         when(playerRepository.save(any(Player.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -175,13 +176,39 @@ class PlayerServiceImplTest {
 
         // Assert
         assertThat(created).isNotNull();
-        assertThat(created.id()).isEqualTo(42L);
+        assertThat(created.id()).isNull(); // auto-généré en vrai, mais null dans test unitaire
         assertThat(created.firstname()).isEqualTo("Novak");
         assertThat(created.country()).isNotNull();
         assertThat(created.country().code()).isEqualTo("SRB");
         assertThat(created.data()).isNotNull();
         assertThat(created.data().rank()).isEqualTo(1);
-        verify(entityManager).getReference(Country.class, "SRB");
+        verify(entityManager).find(Country.class, "SRB");
+        verify(playerRepository).save(any(Player.class));
+    }
+
+    @Test
+    @DisplayName("create: crée le pays s'il n'existe pas encore")
+    void create_creates_country_if_missing() {
+        // Arrange
+        PlayerDto dto = new PlayerDto(null, "Carlos", "Alcaraz", "C.ALC", "M",
+                new CountryDto("ESP", "pic-esp"), "pic-p",
+                new PlayerDataDto(2, 8000, 77000, 183, 22, List.of(1, 0, 1, 1, 1)));
+
+        // Le pays n'existe pas: find retourne null
+        when(entityManager.find(Country.class, "ESP")).thenReturn(null);
+        when(playerRepository.save(any(Player.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        PlayerDto created = service.create(dto);
+
+        // Assert
+        assertThat(created).isNotNull();
+        assertThat(created.country()).isNotNull();
+        assertThat(created.country().code()).isEqualTo("ESP");
+        verify(entityManager).find(Country.class, "ESP");
+        // Vérifier qu'on a persisté le pays nouveau
+        verify(entityManager).persist(any(Country.class));
         verify(playerRepository).save(any(Player.class));
     }
 
